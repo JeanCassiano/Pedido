@@ -63,22 +63,22 @@
         }
 
         #btnSim {
-            background-color: #ff6b6b;
+            background-color: #78e08f; /* Verde */
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 4px 15px rgba(120, 224, 143, 0.4);
         }
 
         #btnSim:hover {
-            background-color: #ff4b4b;
+            background-color: #6bcb81;
             transform: scale(1.05);
         }
 
         #btnNao {
-            background-color: #78e08f;
+            background-color: #ff6b6b; /* Vermelho */
             color: white;
             position: relative;
             transition: all 0.5s ease;
-            box-shadow: 0 4px 15px rgba(120, 224, 143, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
         /* Animação de corações */
@@ -160,7 +160,7 @@
             <button id="btnSim">SIM!</button>
             <button id="btnNao">Não</button>
         </div>
-        <div id="respostaSim" class="hidden">🎉 Que incrível! Te busco às 19h! 😍</div>
+        <div id="respostaSim" class="hidden">🎉 Que incrível! Te busco entre às 19h e às 20h! 😍</div>
     </div>
 
     <script>
@@ -181,15 +181,21 @@
             }
         }
 
-        // Movimento do botão Não
+        // Movimento do botão Não e efeito no botão Sim
         function moveButton() {
             const maxX = window.innerWidth - btnNao.offsetWidth;
             const maxY = window.innerHeight - btnNao.offsetHeight;
-            const newX = Math.random() * maxX * 0.5;
-            const newY = Math.random() * maxY * 0.5;
+            const newX = Math.random() * maxX * 0.4;
+            const newY = Math.random() * maxY * 0.4;
             
             btnNao.style.transform = `translate(${newX}px, ${newY}px)`;
             btnNao.style.transition = 'transform 0.5s ease-out';
+
+            // Aumentar o botão Sim temporariamente
+            btnSim.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                btnSim.style.transform = 'scale(1)';
+            }, 300); // Volta ao tamanho normal após 300ms
         }
 
         // Eventos para desktop
@@ -210,13 +216,18 @@
             setInterval(createHearts, 300);
 
             // Adicionar confetes
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'heart';
                 confetti.innerHTML = ['🎉', '✨', '💖'][Math.floor(Math.random() * 3)];
                 confetti.style.left = Math.random() * 100 + '%';
                 confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
                 hearts.appendChild(confetti);
+
+                // Remover confetes após 5 segundos
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000); // 5000 milissegundos = 5 segundos
             }
         });
 
