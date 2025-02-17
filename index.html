@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Especial ❤️</title>
+    <style>
+        /* Estilos gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        h1 {
+            color: #ff4b6e;
+            font-size: 2.2em;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        #btnSim {
+            background-color: #ff6b6b;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        #btnSim:hover {
+            background-color: #ff4b4b;
+            transform: scale(1.05);
+        }
+
+        #btnNao {
+            background-color: #78e08f;
+            color: white;
+            position: relative;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 15px rgba(120, 224, 143, 0.4);
+        }
+
+        /* Animação de corações */
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4b6e;
+            animation: float 3s linear infinite;
+            opacity: 0;
+            font-size: 24px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* Resposta escondida */
+        .hidden {
+            display: none;
+        }
+
+        #respostaSim {
+            font-size: 1.8em;
+            color: #ff4b6e;
+            margin-top: 2rem;
+            padding: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            button {
+                width: 100%;
+                font-size: 1em;
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+                margin: 10px;
+            }
+
+            #respostaSim {
+                font-size: 1.4em;
+            }
+        }
+
+        @media (max-width: 350px) {
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <div class="container">
+        <h1>Aceita sair comigo este sábado? 💖</h1>
+        <div class="buttons">
+            <button id="btnSim">SIM!</button>
+            <button id="btnNao">Não</button>
+        </div>
+        <div id="respostaSim" class="hidden">🎉 Que incrível! Te busco às 19h! 😍</div>
+    </div>
+
+    <script>
+        const btnNao = document.getElementById('btnNao');
+        const btnSim = document.getElementById('btnSim');
+        const respostaSim = document.getElementById('respostaSim');
+        const hearts = document.getElementById('hearts');
+
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                hearts.appendChild(heart);
+            }
+        }
+
+        // Movimento do botão Não
+        function moveButton() {
+            const maxX = window.innerWidth - btnNao.offsetWidth;
+            const maxY = window.innerHeight - btnNao.offsetHeight;
+            const newX = Math.random() * maxX * 0.5;
+            const newY = Math.random() * maxY * 0.5;
+            
+            btnNao.style.transform = `translate(${newX}px, ${newY}px)`;
+            btnNao.style.transition = 'transform 0.5s ease-out';
+        }
+
+        // Eventos para desktop
+        btnNao.addEventListener('mouseover', moveButton);
+        btnNao.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // Evento para o botão Sim
+        btnSim.addEventListener('click', () => {
+            respostaSim.classList.remove('hidden');
+            btnSim.style.display = 'none';
+            btnNao.style.display = 'none';
+            
+            // Criar efeito de corações
+            createHearts();
+            setInterval(createHearts, 300);
+
+            // Adicionar confetes
+            for (let i = 0; i < 5; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'heart';
+                confetti.innerHTML = ['🎉', '✨', '💖'][Math.floor(Math.random() * 3)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                hearts.appendChild(confetti);
+            }
+        });
+
+        // Resetar posição ao redimensionar a tela
+        window.addEventListener('resize', () => {
+            btnNao.style.transform = 'translate(0)';
+        });
+    </script>
+</body>
+</html>
