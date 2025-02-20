@@ -66,6 +66,7 @@
             background-color: #78e08f; /* Verde */
             color: white;
             box-shadow: 0 4px 15px rgba(120, 224, 143, 0.4);
+            transition: all 0.5s ease;
         }
 
         #btnSim:hover {
@@ -77,7 +78,6 @@
             background-color: #ff6b6b; /* Vermelho */
             color: white;
             position: relative;
-            transition: all 0.5s ease;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
@@ -155,6 +155,28 @@
         .tachado {
             text-decoration: line-through;
         }
+
+        /* Efeito de cobrir a tela */
+        .cobrir-tela {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #78e08f;
+            z-index: 1000;
+            font-size: 3em;
+            color: white;
+            animation: expandir 2s ease forwards;
+        }
+
+        @keyframes expandir {
+            0% { transform: scale(1); }
+            100% { transform: scale(10); }
+        }
     </style>
 </head>
 <body>
@@ -174,43 +196,41 @@
         const respostaSim = document.getElementById('respostaSim');
         const hearts = document.getElementById('hearts');
 
-        function createHearts() {
-            for (let i = 0; i < 15; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 2 + 's';
-                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
-                hearts.appendChild(heart);
+        // Textos que o botão "Sim" vai exibir
+        const textosSim = [
+            "SIM! EU ADORARIA",
+            "SIM, QUERO SAIR CONTIGO",
+            "SIM, VAMOS",
+            "VAMOS VAMOS VAMOS",
+            "CLICA LOGO NO SIM!!!!!"            
+        ];
+        let indiceTexto = 0;
+
+        // Função para aumentar o botão "Sim" e mudar o texto
+        function aumentarBotaoSim() {
+            if (indiceTexto < textosSim.length) {
+                btnSim.textContent = textosSim[indiceTexto];
+                btnSim.style.fontSize = `${1.1 + indiceTexto * 0.5}em`; // Aumenta o tamanho da fonte
+                btnSim.style.padding = `${1 + indiceTexto * 0.5}rem ${2 + indiceTexto * 1}rem`; // Aumenta o padding
+                indiceTexto++;
+            } else {
+                // Cobre a tela com o último texto
+                const telaCheia = document.createElement('div');
+                telaCheia.className = 'cobrir-tela';
+                telaCheia.textContent = textosSim[textosSim.length - 1];
+                document.body.appendChild(telaCheia);
+
+                // Remove os botões e o container
+                btnSim.remove();
+                btnNao.remove();
+                document.querySelector('.container').remove();
             }
         }
 
-        // Movimento do botão Não e efeito no botão Sim
-        function moveButton() {
-            const maxX = window.innerWidth - btnNao.offsetWidth;
-            const maxY = window.innerHeight - btnNao.offsetHeight;
-            const newX = Math.random() * maxX * 0.4;
-            const newY = Math.random() * maxY * 0.4;
-            
-            btnNao.style.transform = `translate(${newX}px, ${newY}px)`;
-            btnNao.style.transition = 'transform 0.5s ease-out';
+        // Evento para o botão "Não"
+        btnNao.addEventListener('click', aumentarBotaoSim);
 
-            // Aumentar o botão Sim temporariamente
-            btnSim.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                btnSim.style.transform = 'scale(1)';
-            }, 300); // Volta ao tamanho normal após 300ms
-        }
-
-        // Eventos para desktop
-        btnNao.addEventListener('mouseover', moveButton);
-        btnNao.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveButton();
-        });
-
-        // Evento para o botão Sim
+        // Evento para o botão "Sim"
         btnSim.addEventListener('click', () => {
             respostaSim.classList.remove('hidden');
             btnSim.style.display = 'none';
@@ -236,10 +256,18 @@
             }
         });
 
-        // Resetar posição ao redimensionar a tela
-        window.addEventListener('resize', () => {
-            btnNao.style.transform = 'translate(0)';
-        });
+        // Função para criar corações
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                hearts.appendChild(heart);
+            }
+        }
     </script>
 </body>
 </html>
