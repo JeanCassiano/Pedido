@@ -150,17 +150,22 @@
                 font-size: 1.5em;
             }
         }
+
+        /* Tachado no texto */
+        .tachado {
+            text-decoration: line-through;
+        }
     </style>
 </head>
 <body>
     <div class="hearts" id="hearts"></div>
     <div class="container">
-        <h1>Aceita sair comigo este sábado? 💖</h1>
+        <h1>Aceita sair comigo <span class="tachado">este sábado</span> algum dia desses? 💖</h1>
         <div class="buttons">
             <button id="btnSim">SIM!</button>
             <button id="btnNao">Não</button>
         </div>
-        <div id="respostaSim" class="hidden">🎉 Que incrível! Te busco entre às 19h e às 20h! 😍</div>
+        <div id="respostaSim" class="hidden">🎉 Que incrível! A gente decide depois! 😍</div>
     </div>
 
     <script>
