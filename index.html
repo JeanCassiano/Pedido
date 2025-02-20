@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido Especial ❤️</title>
     <style>
-        /* Estilos gerais */
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +21,6 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             padding: 20px;
-            overflow-x: hidden;
         }
 
         .container {
@@ -33,7 +31,6 @@
             max-width: 600px;
             width: 100%;
             margin: 20px;
-            transition: transform 0.3s ease;
         }
 
         h1 {
@@ -47,7 +44,6 @@
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 1.5rem;
         }
 
         button {
@@ -57,7 +53,6 @@
             font-size: 1.1em;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 120px;
         }
 
         #btnSim {
@@ -75,28 +70,14 @@
         #btnNao {
             background-color: #ff6b6b;
             color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
-        .cobrir-tela {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #78e08f;
-            z-index: 1000;
-            font-size: 3em;
-            color: white;
-            animation: expandir 2s ease forwards;
-            cursor: pointer;
-        }
-
-        @keyframes expandir {
-            0% { transform: scale(1); }
-            100% { transform: scale(10); }
+        #respostaSim {
+            font-size: 1.8em;
+            color: #ff4b6e;
+            margin-top: 2rem;
+            padding: 20px;
         }
     </style>
 </head>
@@ -107,16 +88,28 @@
             <button id="btnSim">SIM!</button>
             <button id="btnNao">Não</button>
         </div>
+        <div id="respostaSim" class="hidden">🎉 Que incrível! A gente decide depois! 😍</div>
     </div>
 
     <script>
         const btnNao = document.getElementById('btnNao');
         const btnSim = document.getElementById('btnSim');
-        let indiceTexto = 0;
+        const respostaSim = document.getElementById('respostaSim');
+
         const textosSim = [
-            "SIM! EU ADORARIA", "SIM, QUERO SAIR CONTIGO", "SIM, VAMOS", 
-            "VAMOS VAMOS VAMOS", "CLICA LOGO NO SIM!!!!!"
+            "SIM! EU ADORARIA",
+            "SIM, QUERO SAIR CONTIGO",
+            "SIM, VAMOS",
+            "VAMOS VAMOS VAMOS",
+            "CLICA LOGO NO SIM!!!!!",
+            "SIM, JÁ ESTOU ME ARRUMANDO",
+            "É CLARO QUE SIM! 😍",
+            "MAS É ÓBVIO QUE SIM!!!",
+            "SIM SIM SIM, AGORA MESMO",
+            "VAMOS LOGO!!! 🎉",
+            "SIM, NÃO TEM COMO RECUSAR! ❤️"
         ];
+        let indiceTexto = 0;
 
         function aumentarBotaoSim() {
             if (indiceTexto < textosSim.length) {
@@ -124,20 +117,14 @@
                 btnSim.style.fontSize = `${1.1 + indiceTexto * 0.5}em`;
                 btnSim.style.padding = `${1 + indiceTexto * 0.5}rem ${2 + indiceTexto * 1}rem`;
                 indiceTexto++;
-            } else {
-                const telaCheia = document.createElement('div');
-                telaCheia.className = 'cobrir-tela';
-                telaCheia.textContent = textosSim[textosSim.length - 1];
-                document.body.appendChild(telaCheia);
-                telaCheia.addEventListener('click', () => {
-                    alert('🎉 Que incrível! A gente decide depois! 😍');
-                });
             }
         }
 
         btnNao.addEventListener('click', aumentarBotaoSim);
         btnSim.addEventListener('click', () => {
-            alert('🎉 Que incrível! A gente decide depois! 😍');
+            respostaSim.classList.remove('hidden');
+            btnSim.style.display = 'none';
+            btnNao.style.display = 'none';
         });
     </script>
 </body>
