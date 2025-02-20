@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido Especial ❤️</title>
     <style>
+        /* Estilos gerais */
         * {
             margin: 0;
             padding: 0;
@@ -21,6 +22,7 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -31,12 +33,15 @@
             max-width: 600px;
             width: 100%;
             margin: 20px;
+            transition: transform 0.3s ease;
         }
 
         h1 {
             color: #ff4b6e;
             font-size: 2.2em;
             margin-bottom: 2rem;
+            line-height: 1.3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .buttons {
@@ -44,6 +49,7 @@
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
+            margin-top: 1.5rem;
         }
 
         button {
@@ -53,10 +59,11 @@
             font-size: 1.1em;
             cursor: pointer;
             transition: all 0.3s ease;
+            min-width: 120px;
         }
 
         #btnSim {
-            background-color: #78e08f;
+            background-color: #78e08f; /* Verde */
             color: white;
             box-shadow: 0 4px 15px rgba(120, 224, 143, 0.4);
             transition: all 0.5s ease;
@@ -68,9 +75,37 @@
         }
 
         #btnNao {
-            background-color: #ff6b6b;
+            background-color: #ff6b6b; /* Vermelho */
             color: white;
+            position: relative;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Animação de corações */
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4b6e;
+            animation: float 3s linear infinite;
+            opacity: 0;
+            font-size: 24px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* Resposta escondida */
+        .hidden {
+            display: none;
         }
 
         #respostaSim {
@@ -78,12 +113,76 @@
             color: #ff4b6e;
             margin-top: 2rem;
             padding: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            button {
+                width: 100%;
+                font-size: 1em;
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+                margin: 10px;
+            }
+
+            #respostaSim {
+                font-size: 1.4em;
+            }
+        }
+
+        @media (max-width: 350px) {
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Tachado no texto */
+        .tachado {
+            text-decoration: line-through;
+        }
+
+        /* Efeito de cobrir a tela */
+        .cobrir-tela {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #78e08f;
+            z-index: 1000;
+            font-size: 3em;
+            color: white;
+            animation: expandir 2s ease forwards;
+        }
+
+        @keyframes expandir {
+            0% { transform: scale(1); }
+            100% { transform: scale(10); }
         }
     </style>
 </head>
 <body>
+    <div class="hearts" id="hearts"></div>
     <div class="container">
-        <h1>Aceita sair comigo algum dia desses? 💖</h1>
+        <h1>Aceita sair comigo <span class="tachado">este sábado</span> algum dia desses? 💖</h1>
         <div class="buttons">
             <button id="btnSim">SIM!</button>
             <button id="btnNao">Não</button>
@@ -95,37 +194,101 @@
         const btnNao = document.getElementById('btnNao');
         const btnSim = document.getElementById('btnSim');
         const respostaSim = document.getElementById('respostaSim');
+        const hearts = document.getElementById('hearts');
 
+        // Textos que o botão "Sim" vai exibir
         const textosSim = [
             "SIM! EU ADORARIA",
             "SIM, QUERO SAIR CONTIGO",
             "SIM, VAMOS",
-            "VAMOS VAMOS VAMOS",
-            "CLICA LOGO NO SIM!!!!!",
-            "SIM, JÁ ESTOU ME ARRUMANDO",
-            "É CLARO QUE SIM! 😍",
-            "MAS É ÓBVIO QUE SIM!!!",
-            "SIM SIM SIM, AGORA MESMO",
-            "VAMOS LOGO!!! 🎉",
-            "SIM, NÃO TEM COMO RECUSAR! ❤️"
+            "VAMOS VAMOS VAMOS E MAIS"
         ];
         let indiceTexto = 0;
 
+        // Função para aumentar o botão "Sim" e mudar o texto
         function aumentarBotaoSim() {
             if (indiceTexto < textosSim.length) {
                 btnSim.textContent = textosSim[indiceTexto];
-                btnSim.style.fontSize = `${1.1 + indiceTexto * 0.5}em`;
-                btnSim.style.padding = `${1 + indiceTexto * 0.5}rem ${2 + indiceTexto * 1}rem`;
+                btnSim.style.fontSize = `${1.1 + indiceTexto * 0.5}em`; // Aumenta o tamanho da fonte
+                btnSim.style.padding = `${1 + indiceTexto * 0.5}rem ${2 + indiceTexto * 1}rem`; // Aumenta o padding
                 indiceTexto++;
+            } else {
+                // Cobre a tela com o último texto
+                const telaCheia = document.createElement('div');
+                telaCheia.className = 'cobrir-tela';
+                telaCheia.textContent = textosSim[textosSim.length - 1];
+                document.body.appendChild(telaCheia);
+
+                // Mantém o botão "Sim" clicável
+                telaCheia.addEventListener('click', () => {
+                    respostaSim.classList.remove('hidden');
+                    telaCheia.remove();
+                    btnSim.style.display = 'none';
+                    btnNao.style.display = 'none';
+
+                    // Criar efeito de corações
+                    createHearts();
+                    setInterval(createHearts, 300);
+
+                    // Adicionar confetes
+                    for (let i = 0; i < 50; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'heart';
+                        confetti.innerHTML = ['🎉', '✨', '💖'][Math.floor(Math.random() * 3)];
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                        hearts.appendChild(confetti);
+
+                        // Remover confetes após 5 segundos
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 5000); // 5000 milissegundos = 5 segundos
+                    }
+                });
             }
         }
 
+        // Evento para o botão "Não"
         btnNao.addEventListener('click', aumentarBotaoSim);
+
+        // Evento para o botão "Sim"
         btnSim.addEventListener('click', () => {
             respostaSim.classList.remove('hidden');
             btnSim.style.display = 'none';
             btnNao.style.display = 'none';
+            
+            // Criar efeito de corações
+            createHearts();
+            setInterval(createHearts, 300);
+
+            // Adicionar confetes
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'heart';
+                confetti.innerHTML = ['🎉', '✨', '💖'][Math.floor(Math.random() * 3)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                hearts.appendChild(confetti);
+
+                // Remover confetes após 5 segundos
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000); // 5000 milissegundos = 5 segundos
+            }
         });
+
+        // Função para criar corações
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                hearts.appendChild(heart);
+            }
+        }
     </script>
 </body>
 </html>
